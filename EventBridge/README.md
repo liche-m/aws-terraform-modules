@@ -12,6 +12,8 @@ Some notable configurations to be aware of when using this module:
 | terraform | >= 1.3.0 |
 | aws | >= 4.40 |
 
+<br>
+
 ## EventBridge Rule Inputs
 
 | Name | Description | Type | Default | Required |
@@ -19,10 +21,12 @@ Some notable configurations to be aware of when using this module:
 | app_name | The name of the application/service. This will be used to name the resources. | `string` | N/A | Yes |
 | description | A description of the EventBridge Rule. | `string` | N/A | Yes |
 | event_bus | The name or ARN of the Event Bus to associate with the EventBridge Rule. | `string` | `default` | No |
-| schedule_expression | The schedule expression for the EventBridge Rule. For example: cron(0 20 * * ? *) or rate(5 minutes) | `string` | `""` | No |
+| schedule_expression | The schedule expression for the EventBridge Rule. For example: `cron(0 20 * * ? *)` or `rate(5 minutes)` | `string` | `""` | No |
 | event_pattern | The event pattern described in a JSON object. At least one of **schedule_expression** or **event_pattern** is required. **Note:** The event pattern size [limit](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-quota.html) is 2048 characters by default. This is adjustable up to 4096 characters. | `string` | `null` | No |
 | tags | The tags for the EventBridge Rule. | `map(string)` | `{}` | No |
 | enabled | Feature flag to create or implicitly destroy resources. | `bool` | `true` | No |
+
+<br>
 
 ## EventBridge Target Inputs
 
@@ -32,6 +36,8 @@ Some notable configurations to be aware of when using this module:
 | lambda_target | A list of the qualified/unqualified Lambda Function ARNs to use as EventBridge targets. | `list(string)` | `[]` | No |
 | sns_target | A list of the SNS Topic ARNs to use as EventBridge targets. | `list(string)` | `[]` | No |
 | sqs_target | A map containing SQS Queue ARNs, URLs and their respective Message Group ID (if applicable). | <pre>map(object({<br>    arn              = string<br>    queue_url        = optional(string)<br>    message_group_id = optional(string)<br>  }))</pre> | `{}` | No. The **message_group_id** is a required parameter for FIFO Queues. |
+
+<br>
 
 ## ECS Target Inputs
 
