@@ -3,7 +3,7 @@
 Configuration in this directory creates an Amazon EventBridge Rule and it's associated targets.
 
 Some notable configurations to be aware of when using this module:
-- Example
+- **DO NOT** specify the `target_id` parameter when there are multiple EventBridge targets.
 
 ## Requirements
 
@@ -59,3 +59,123 @@ Some notable configurations to be aware of when using this module:
 <br>
 
 ## Usage
+
+<br>
+
+**Creates an EventBridge Rule that is based on an Event Pattern, with 5 Lambda Functions as targets. A Resource-Based Policy statement is also added to each Lambda Function in the list below.**
+
+```
+module "five_lambdas_event_pattern" {
+  source        = "../"
+  app_name      = "test-6-lambda-target"
+  description   = "Based on an Event Pattern. Five Lambda Functions as event targets."
+  event_pattern = <<PATTERN
+  {
+    "source": ["aws.autoscaling"],
+    "detail-type": ["EC2 Instance Launch Successful", "EC2 Instance Launch Unsuccessful"],
+    "detail": {
+        "AutoScalingGroupName": ["Api-Service-ASG", "MoneyOut-API-Ozow-ASG", "Payment-Flow-Ozow-ASG", "Payment-Service-API-OZOW-ASG"]
+    }
+  }
+  PATTERN
+  tags = {
+    DevOpsEngineer = "Liche"
+  }
+
+  lambda_target = [
+    "arn:aws:lambda:eu-west-1:865204308355:function:websocketpoc",
+    "arn:aws:lambda:eu-west-1:865204308355:function:TestRabbitMQListener",
+    "arn:aws:lambda:eu-west-1:865204308355:function:bank-apis-wallet",
+    "arn:aws:lambda:eu-west-1:865204308355:function:http-retry",
+    "arn:aws:lambda:eu-west-1:865204308355:function:dev-kycScreening-reportProcessingConsumer"
+  ]
+}
+```
+
+<br>
+
+**Creates an EventBridge Rule that is based on a Schedule Expression (rate(5 minutes)), with 3 SNS Topics as targets.**
+
+```
+module "three_sns_topics_rate" {
+  source              = "../"
+  app_name            = "test-4-sns-target"
+  description         = "Based on a Schedule Expression: rate(5 minutes). Three SNS Topics as event targets."
+  schedule_expression = "rate(5 minutes)"
+  tags = {
+    DevOpsEngineer = "Liche"
+  }
+
+  sns_target = [
+    "arn:aws:sns:eu-west-1:865204308355:test_forwarding",
+    "arn:aws:sns:eu-west-1:865204308355:TokenNotification",
+    "arn:aws:sns:eu-west-1:865204308355:TransactionConsentTopic"
+  ]
+}
+```
+
+<br>
+
+**Creates an EventBridge Rule that is based on a Schedule Expression (cron(0 20 * * ? \*)), with 1 FIFO Queue as a target.**
+
+```
+module "one_fifo_sqs_cron" {
+  source              = "../"
+  app_name            = "test-2-fifo-sqs-target"
+  description         = "Based on a Schedule Expression: cron(0 20 * * ? *). One SNS Topic as an event target."
+  schedule_expression = "cron(0 20 * * ? *)"
+  tags = {
+    DevOpsEngineer = "Liche"
+  }
+  target_id = "fifo-sqs-test-2"
+  sqs_target = {
+    "queue1" = {
+      arn              = "arn:aws:sqs:eu-west-1:865204308355:BulkRequestPaymentProcessorQueue.fifo"
+      message_group_id = "fifo-message-group-id-1"
+    }
+  }
+}
+```
+
+<br>
+
+Creates an EventBridge Rule that is based on
+
+```
+module "mixed_sqs_event_pattern" {
+  source        = "../"
+  app_name      = "test-3-mixed-sqs-target"
+  description   = "Based on an Event Pattern. A combination of Standard and FIFO SQS Queues as event targets."
+  event_pattern = <<PATTERN
+  {
+    "source": ["aws.s3"],
+    "detail-type": ["Object Created", "Object Deleted", "Object Storage Class Changed", "Object Tags Added", "Object Tags Deleted"],
+    "detail": {
+      "bucket": {
+        "name": ["dev-detect-idle-lambdas-bucket", "dev-absa-archive"]
+      }
+    }
+  }
+  PATTERN
+
+  tags = {
+    DevOpsEngineer = "Liche"
+  }
+  sqs_target = {
+    "queue1" = {
+      arn = "arn:aws:sqs:eu-west-1:865204308355:BillingTransactionsJobQueue"
+    }
+    "queue2" = {
+      arn              = "arn:aws:sqs:eu-west-1:865204308355:BulkRequestPaymentProcessorQueue.fifo"
+      message_group_id = "MessageGroupA"
+    }
+    "queue3" = {
+      arn              = "arn:aws:sqs:eu-west-1:865204308355:dev-payouts-payout-update-queue.fifo"
+      message_group_id = "MessageGroupB"
+    }
+    "queue4" = {
+      arn = "arn:aws:sqs:eu-west-1:865204308355:TransactionVerificationQueue"
+    }
+  }
+}
+```
