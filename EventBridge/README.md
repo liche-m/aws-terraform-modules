@@ -14,12 +14,36 @@ Some notable configurations to be aware of when using this module:
 - The usage for each type of event target is provided below. Kindly view the usage for the event target you intend on configuring, prior to using this module.
 - A variety of Test Cases can be found here: `Tests/`
 
+<br>
+
 ## Requirements
 
 | Name | Version |
 | ----------- | ----------- |
 | terraform | >= 1.3.0 |
 | aws | >= 4.40 |
+
+## Modules
+
+| Name | Source |
+| ----------- | ----------- |
+| Tests | `Tests/` |
+
+## Resources
+
+| Name | Type | Source |
+| ----------- | ----------- | ----------- |
+| aws_cloudwatch_event_rule.this | resource | main.tf |
+| aws_cloudwatch_event_target.lambda | resource | main.tf |
+| aws_cloudwatch_event_target.sns | resource | main.tf |
+| aws_cloudwatch_event_target.sqs | resource | main.tf |
+| aws_lambda_permission.lambda_policy | resource | main.tf |
+| aws_cloudwatch_event_target.ecs | resource | main.tf |
+| aws_iam_role.eventbridge_role.eventbridge_role | resource | iam.tf |
+| aws_iam_policy_document.this | data source | iam.tf |
+| aws_iam_policy.this | resource | iam.tf |
+| aws_iam_role_policy_attachment.policy_1 | resource | iam.tf |
+| aws_iam_role_policy_attachment | resource | iam.tf |
 
 <br>
 
