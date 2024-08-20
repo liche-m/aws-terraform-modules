@@ -23,11 +23,15 @@ Some notable configurations to be aware of when using this module:
 | terraform | >= 1.3.0 |
 | aws | >= 4.40 |
 
+<br>
+
 ## Modules
 
 | Name | Source |
 | ----------- | ----------- |
 | Tests | `Tests/` |
+
+<br>
 
 ## Resources
 
