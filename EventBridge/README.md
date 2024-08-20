@@ -33,17 +33,17 @@ Some notable configurations to be aware of when using this module:
 
 | Name | Type | Source |
 | ----------- | ----------- | ----------- |
-| aws_cloudwatch_event_rule.this | resource | main.tf |
-| aws_cloudwatch_event_target.lambda | resource | main.tf |
-| aws_cloudwatch_event_target.sns | resource | main.tf |
-| aws_cloudwatch_event_target.sqs | resource | main.tf |
-| aws_lambda_permission.lambda_policy | resource | main.tf |
-| aws_cloudwatch_event_target.ecs | resource | main.tf |
-| aws_iam_role.eventbridge_role.eventbridge_role | resource | iam.tf |
-| aws_iam_policy_document.this | data source | iam.tf |
-| aws_iam_policy.this | resource | iam.tf |
-| aws_iam_role_policy_attachment.policy_1 | resource | iam.tf |
-| aws_iam_role_policy_attachment | resource | iam.tf |
+| [aws_cloudwatch_event_rule.this]() | resource | main.tf |
+| [aws_cloudwatch_event_target.lambda]() | resource | main.tf |
+| [aws_cloudwatch_event_target.sns]() | resource | main.tf |
+| [aws_cloudwatch_event_target.sqs]() | resource | main.tf |
+| [aws_lambda_permission.lambda_policy]() | resource | main.tf |
+| [aws_cloudwatch_event_target.ecs]() | resource | main.tf |
+| [aws_iam_role.eventbridge_role.eventbridge_role]() | resource | iam.tf |
+| [aws_iam_policy_document.this]() | data source | iam.tf |
+| [aws_iam_policy.this]() | resource | iam.tf |
+| [aws_iam_role_policy_attachment.policy_1]() | resource | iam.tf |
+| [aws_iam_role_policy_attachment]() | resource | iam.tf |
 
 <br>
 
