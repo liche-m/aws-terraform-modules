@@ -62,9 +62,9 @@ Some notable configurations to be aware of when using this module:
 
 <br>
 
-**Creates an EventBridge Rule that is based on an Event Pattern, with 5 Lambda Functions as targets. A Resource-Based Policy statement is also added to each Lambda Function in the list below.**
+Creates an EventBridge Rule that is based on an Event Pattern, with 5 Lambda Functions as event targets. A Resource-Based Policy statement is also added to each Lambda Function in the list below.
 
-```
+```hcl
 module "five_lambdas_event_pattern" {
   source        = "../"
   app_name      = "test-6-lambda-target"
@@ -94,9 +94,9 @@ module "five_lambdas_event_pattern" {
 
 <br>
 
-**Creates an EventBridge Rule that is based on a Schedule Expression (rate(5 minutes)), with 3 SNS Topics as targets.**
+Creates an EventBridge Rule that is based on a Schedule Expression (rate(5 minutes)), with 3 SNS Topics as event targets.
 
-```
+```hcl
 module "three_sns_topics_rate" {
   source              = "../"
   app_name            = "test-4-sns-target"
@@ -116,9 +116,9 @@ module "three_sns_topics_rate" {
 
 <br>
 
-**Creates an EventBridge Rule that is based on a Schedule Expression (cron(0 20 * * ? \*)), with 1 FIFO Queue as a target.**
+Creates an EventBridge Rule that is based on a Schedule Expression (cron(0 20 * * ? \*)), with 1 FIFO Queue as an event target.
 
-```
+```hcl
 module "one_fifo_sqs_cron" {
   source              = "../"
   app_name            = "test-2-fifo-sqs-target"
@@ -139,9 +139,10 @@ module "one_fifo_sqs_cron" {
 
 <br>
 
-Creates an EventBridge Rule that is based on
+Creates an EventBridge Rule that is based on an Event Pattern. There are 2 Standard Queues and 2 FIFO Queues configured as event targets.
+**NOTE:** The `message_group_id` parameter is **required** for FIFO Queues.
 
-```
+```hcl
 module "mixed_sqs_event_pattern" {
   source        = "../"
   app_name      = "test-3-mixed-sqs-target"
@@ -179,3 +180,203 @@ module "mixed_sqs_event_pattern" {
   }
 }
 ```
+
+<br>
+
+## ECS Usage
+
+### Example 1:
+- Creates an EventBridge Rule that is based on a Schedule Expression: `rate(5 minutes)`
+- The **Launch Type** parameter and **Capacity Provider Strategy** parameter is **mutually exclusive**.
+- There are 3 separate Task Definitions *(that each have their own specific configurations)* configured as event targets.
+
+  ```hcl
+  module "multiple_ecs_rate" {
+    source                  = "../"
+    app_name                = "multiple-ecs-targets-test-1"
+    description             = "Based on a Schedule Expression: rate(5 minutes). Multiple ECS Task Definitions as event targets."
+    schedule_expression     = "rate(5 minutes)"
+    set_provider_strategy   = [true, false, true]
+    enable_ecs_managed_tags = [false, true, true]
+    enable_execute_command  = [true, true, false]
+    launch_types            = [null, "FARGATE", null]
+    platform_versions       = ["LATEST", null, "LATEST"]
+    propagate_tags          = ["TASK_DEFINITION", null, "TASK_DEFINITION"]
+    task_counts             = [3, 2, 1]
+    ecs_tags = [
+      {
+        Dummy = "Test 1"
+      },
+      {
+        Dummy = "Test 1"
+      }
+    ]
+
+    tags = {
+      DevOpsEngineer = "Liche"
+    }
+
+    task_definitions = [
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/bulk-payment-api-tests:17",
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/merchant-services-ui-tests:2",
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/special-projects-tests:2"
+    ]
+
+    ecs_clusters = [
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate",
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate",
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate"
+    ]
+
+    capacity_provider_strategies = [
+      [
+        {
+          capacity_provider = "FARGATE"
+          base              = 1
+          weight            = 65
+        },
+        {
+          capacity_provider = "FARGATE_SPOT"
+          weight            = 35
+        }
+      ],
+      [],
+      [
+        {
+          capacity_provider = "FARGATE"
+          base              = 1
+          weight            = 65
+        },
+        {
+          capacity_provider = "FARGATE_SPOT"
+          weight            = 35
+        }
+      ]
+    ]
+
+    network_configurations = [
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      },
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      },
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      }
+    ]
+
+  }
+  ```
+  
+- The index position of each Task Definition is mapped to the index position of all the other parameters specified.
+- For example, the Task Definition ARN at index position 1 is:
+
+  `arn:aws:ecs:eu-west-1:865204308355:task-definition/merchant-services-ui-tests:2`
+
+- The following configurations apply to the aforementioned Task Definition:
+
+  ```hcl
+  set_provider_strategy[1]   = false
+  enable_ecs_managed_tags[1] = true
+  enable_execute_command[1]  = true
+  launch_types[1]            = "FARGATE"
+  platform_versions[1]       = null
+  propagate_tags[1]          = null
+  task_counts[1]             = 2
+
+  ecs_tags[1] = {
+      Dummy = "Test 1"
+    }
+
+  ecs_clusters[1] = "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate"
+  capacity_provider_strategies[1] = []
+
+  network_configurations[1] = {
+      assign_public_ip = false
+      security_groups  = ["sg-0276e724083cc837d"]
+      subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+    }
+
+  ```
+  
+### Example 2:
+
+- Creates an EventBridge Rule that is based on an Event Pattern.
+- There are **NO** Launch Types or Capacity Provider Strategies specified.
+
+  ```hcl
+  module "multiple_ecs_event_pattern_2" {
+    source      = "../"
+    app_name    = "multiple-ecs-targets-test-4"
+    description = "Based on an Event Pattern. Multiple ECS Task Definitions as event targets."
+
+    event_pattern = <<PATTERN
+    {
+      "source": ["aws.s3"],
+      "detail-type": ["Object Created", "Object Deleted", "Object Storage Class Changed", "Object Tags Added", "Object Tags Deleted"],
+      "detail": {
+        "bucket": {
+          "name": ["dev-detect-idle-lambdas-bucket", "dev-absa-archive"]
+        }
+      }
+    }
+    PATTERN
+
+    set_provider_strategy = [false, false, false]
+
+    ecs_tags = [
+      {},
+      {},
+      {
+        Dummy = "Test 1"
+      }
+    ]
+
+    tags = {
+      DevOpsEngineer = "Liche"
+    }
+
+    task_definitions = [
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/bulk-payment-api-tests:17",
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/merchant-services-ui-tests:2",
+      "arn:aws:ecs:eu-west-1:865204308355:task-definition/special-projects-tests:2"
+    ]
+
+    ecs_clusters = [
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate",
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate",
+      "arn:aws:ecs:eu-west-1:865204308355:cluster/ozow-ecs-fargate"
+    ]
+
+    network_configurations = [
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      },
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      },
+      {
+        assign_public_ip = false
+        security_groups  = ["sg-0276e724083cc837d"]
+        subnets          = ["subnet-0cae8640b1c4e24f7", "subnet-0a12a759296e4ae46"]
+      }
+    ]
+
+  }
+  ```
+
+
+
+
+
