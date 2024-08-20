@@ -131,7 +131,7 @@ module "five_lambdas_event_pattern" {
 
 <br>
 
-Creates an EventBridge Rule that is based on a Schedule Expression (rate(5 minutes)), with 3 SNS Topics as event targets.
+Creates an EventBridge Rule that is based on a Schedule Expression `rate(5 minutes)` with 3 SNS Topics as event targets.
 
 ```hcl
 module "three_sns_topics_rate" {
@@ -153,7 +153,7 @@ module "three_sns_topics_rate" {
 
 <br>
 
-Creates an EventBridge Rule that is based on a Schedule Expression (cron(0 20 * * ? \*)), with 1 FIFO Queue as an event target.
+Creates an EventBridge Rule that is based on a Schedule Expression `cron(0 20 * * ? *)` with 1 FIFO Queue as an event target.
 
 ```hcl
 module "one_fifo_sqs_cron" {
@@ -226,6 +226,7 @@ module "mixed_sqs_event_pattern" {
 - Creates an EventBridge Rule that is based on a Schedule Expression: `rate(5 minutes)`
 - The **Launch Type** parameter and **Capacity Provider Strategy** parameter is **mutually exclusive**.
 - There are 3 separate Task Definitions *(that each have their own specific configurations)* configured as event targets.
+- An IAM Role is created for EventBridge Rules with ECS targets.
 
   ```hcl
   module "multiple_ecs_rate" {
