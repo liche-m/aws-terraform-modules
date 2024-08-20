@@ -37,17 +37,17 @@ Some notable configurations to be aware of when using this module:
 
 | Name | Type | Source |
 | ----------- | ----------- | ----------- |
-| [aws_cloudwatch_event_rule.this]() | resource | main.tf |
-| [aws_cloudwatch_event_target.lambda]() | resource | main.tf |
-| [aws_cloudwatch_event_target.sns]() | resource | main.tf |
-| [aws_cloudwatch_event_target.sqs]() | resource | main.tf |
-| [aws_lambda_permission.lambda_policy]() | resource | main.tf |
-| [aws_cloudwatch_event_target.ecs]() | resource | main.tf |
-| [aws_iam_role.eventbridge_role.eventbridge_role]() | resource | iam.tf |
-| [aws_iam_policy_document.this]() | data source | iam.tf |
-| [aws_iam_policy.this]() | resource | iam.tf |
-| [aws_iam_role_policy_attachment.policy_1]() | resource | iam.tf |
-| [aws_iam_role_policy_attachment]() | resource | iam.tf |
+| [aws_cloudwatch_event_rule.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_rule) | resource | main.tf |
+| [aws_cloudwatch_event_target.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource | main.tf |
+| [aws_cloudwatch_event_target.sns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target) | resource | main.tf |
+| [aws_cloudwatch_event_target.sqs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#sqs_target) | resource | main.tf |
+| [aws_lambda_permission.lambda_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource | main.tf |
+| [aws_cloudwatch_event_target.ecs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#ecs_target) | resource | main.tf |
+| [aws_iam_role.eventbridge_role.eventbridge_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource | iam.tf |
+| [aws_iam_policy_document.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source | iam.tf |
+| [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource | iam.tf |
+| [aws_iam_role_policy_attachment.policy_1](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource | iam.tf |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource | iam.tf |
 
 <br>
 
