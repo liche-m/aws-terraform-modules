@@ -17,9 +17,9 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "ozow-terraform-state-dev"
+    bucket         = "terraform-state-bucket"
     key            = "eventbridge/tests/terraform.tfstate"
-    dynamodb_table = "ozow-terraform-statelock"
+    dynamodb_table = "terraform-statelock-table"
     region         = "eu-west-1"
   }
 }
