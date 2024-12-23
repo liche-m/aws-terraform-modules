@@ -44,7 +44,6 @@ Some notable constraints to be aware of when using this module:
 ## Note:
 
 - The usage for each type of Use Case is provided below.
-- Some Test Cases can be found here: `tests/`
 
 ## Requirements
 
