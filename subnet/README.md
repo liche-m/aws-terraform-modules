@@ -41,9 +41,13 @@ Some notable constraints to be aware of when using this module:
   <br> **AND** <br> 
 - There is **NO** other ***Private*** Route Table for the VPC in this particular Availability Zone.
 
+<br>
+
 ## Note:
 
 - The usage for each type of Use Case is provided below.
+
+<br>
 
 ## Requirements
 
@@ -51,8 +55,10 @@ Some notable constraints to be aware of when using this module:
 
 | Name | Version |
 | ----------- | ----------- |
-| terraform | >= 1.3.0 |
-| aws | >= 5.54.1 |
+| terraform | >= 1.9.8 |
+| aws | >= 5.94.1 |
+
+<br>
 
 ## Resources
 
@@ -70,6 +76,8 @@ Some notable constraints to be aware of when using this module:
 | [aws_route_table.private_rt](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource | main.tf |
 | [aws_vpc_endpoint_route_table_association.s3_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_route_table_association) | resource | main.tf |
 | [aws_vpc_endpoint_route_table_association.dynamodb_vpce](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_route_table_association) | resource | main.tf |
+
+<br>
 
 ## Subnet Inputs
 
@@ -96,6 +104,8 @@ Some notable constraints to be aware of when using this module:
 | <a name="public_subnet_tags"></a> [public\_subnet\_tags](#input\_public\_subnet\_tags) | A map of tags to assign to the new Public Subnet. | `map(string)` | `{}` | No |
 | <a name="private_subnet_tags"></a> [private\_subnet\_tags](#input\_private\_subnet\_tags) | A map of tags to assign to the new Private Subnet. | `map(string)` | `{}` | No |
 
+<br>
+
 ## Elastic IP Inputs
 
 <br>
@@ -107,6 +117,8 @@ Some notable constraints to be aware of when using this module:
 | <a name="natgw_name"></a> [natgw\_name](#input\_natgw\_name) | The name of the NAT Gateway you want to create. Only specify if you are creating a Public Subnet in an AZ that has **NO** existing Public Subnets. | `string` | `null` | No |
 | <a name="natgw_tags"></a> [natgw\_tags](#input\_natgw\_tags) | A map of tags to assign to the NAT Gateway. | `map(string)` | `{}` | No |
 
+<br>
+
 ## Private Route Table Inputs
 
 <br>
@@ -117,6 +129,8 @@ Some notable constraints to be aware of when using this module:
 | <a name="private_rt_id"></a> [private\_rt\_id](#input\_private\_rt\_id) | The Route Table ID of the Private Route Table. Only specify this if you are creating a Private Subnet and a Route Table association. | `string` | `null` | No |
 | <a name="private_rt_name"></a> [private\_rt\_name](#input\_private\_rt\_name) | The name of the Route Table you want to create. Only specify if you are creating the following: <br>  1. A Public Subnet in an AZ that has **NO** existing Public Subnets. <br>  2. A NAT Gateway. | `string` | `null` | No |
 | <a name="private_rt_tags"></a> [private\_rt\_tags](#input\_private\_rt\_tags) | A map of tags to assign to the new Private Route Table. | `map(string)` | `{}` | No |
+
+<br>
 
 ## Route Target Inputs
 
@@ -130,6 +144,8 @@ Some notable constraints to be aware of when using this module:
 | <a name="dynamodb_gateway_endpoint"></a> [s3\_dynamodb\_endpoint](#input\_dynamodb\_gateway\_endpoint) | The ID of the DynamoDB Gateway VPC endpoint. | `string` | `null` | No |
 | <a name="vpc_peering_connections"></a> [vpc\_peering\_connections](#input\_vpc\_peering\_connections) | A map of objects containing the ID of a VPC Peering Connection and the associated destination CIDR block. | <pre>map(object({<br>    pcx_id     = string<br>    cidr_block = string<br>  }))</pre> | `{}` | No |
 | <a name="network_interfaces"></a> [network\_interfaces](#input\_network\_interfaces) | A map of objects containing the ID of an ENI and the associated destination CIDR block. | <pre>map(object({<br>    eni_id     = string<br>    cidr_block = string<br>  }))</pre> | `{}` | No |
+
+<br>
 
 ## Usage
 
@@ -162,11 +178,11 @@ module "use_case_1" {
 
   vpc_peering_connections = {
     pcx_1 = {
-      pcx_id     = "pcx-0bc13f7df27e46286"
+      pcx_id     = "pcx-0bc14444427e46286"
       cidr_block = "172.30.0.0/16"
     },
     pcx_2 = {
-      pcx_id     = "pcx-0dc13f7df27e57391"
+      pcx_id     = "pcx-0dc15555527e57391"
       cidr_block = "10.0.0.0/16"
     }
   }
@@ -210,7 +226,7 @@ module "use_case_2" {
   private_subnet_name = "dev-private-4"
   private_subnet_cidr = "10.0.8.0/24"
   availability_zone   = "eu-west-1c"
-  private_rt_id       = "rtb-02e5499fdd5e57b4e"
+  private_rt_id       = "rtb-02e54777775e57b4e"
 
   private_subnet_tags = {
     Designation  = "Private",
