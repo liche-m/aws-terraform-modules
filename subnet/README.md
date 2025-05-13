@@ -211,6 +211,8 @@ module "use_case_1" {
 }
 ```
 
+<br>
+
 ### Use Case 2:
 
 This configuration creates a Private Subnet and associates it with an existing Route Table.
